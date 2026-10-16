@@ -1,0 +1,15 @@
+flowchart TD
+    A[Загрузка пары<br>через веб-интерфейс] --> B{Модель<br>загружена?}
+    B -- Нет --> C[Baseline Engine:<br>разность каналов / NDVI / SSIM]
+    B -- Да --> D[Inference Engine:<br>forward pass модели]
+    C --> E[Сырая маска изменений]
+    D --> E
+    E --> F[Postprocessor:<br>морфология, фильтр по площади]
+    F --> G[Векторизация:<br>GeoPandas + Shapely]
+    G --> H[(changes.geojson)]
+    H --> I[Визуализация на карте<br>Leaflet]
+    H --> J[Формирование отчёта<br>CSV / PDF]
+
+    style A fill:#4a7c59,color:#fff
+    style C fill:#7c4a2c,color:#fff
+    style H fill:#2c4a7c,color:#fff

@@ -1,0 +1,80 @@
+
+---
+
+## 📄 data-schema.md
+
+```markdown
+# Схема данных: GeoChange Monitor
+
+## ERD — основные сущности
+
+```mermaid
+erDiagram
+    SCENE {
+        string scene_id PK
+        string name
+        float bbox_min_lat
+        float bbox_min_lon
+        float bbox_max_lat
+        float bbox_max_lon
+        string source
+    }
+
+    IMAGE {
+        string image_id PK
+        string scene_id FK
+        date capture_date
+        string file_path
+        int width
+        int height
+        string crs
+        string sensor
+    }
+
+    IMAGE_PAIR {
+        string pair_id PK
+        string scene_id FK
+        string image_before_id FK
+        string image_after_id FK
+        bool is_labeled
+    }
+
+    MODEL {
+        string model_id PK
+        string architecture
+        string version
+        date trained_at
+        float iou_val
+        float f1_val
+        string file_path
+    }
+
+    PREDICTION {
+        string prediction_id PK
+        string pair_id FK
+        string model_id FK
+        datetime created_at
+        float iou
+        float f1
+        float inference_time_ms
+        string mask_path
+    }
+
+    CHANGE_OBJECT {
+        string object_id PK
+        string prediction_id FK
+        string change_type
+        float area_m2
+        float centroid_lat
+        float centroid_lon
+        float confidence
+        string geometry_geojson
+    }
+
+    SCENE ||--o{ IMAGE : "contains"
+    SCENE ||--o{ IMAGE_PAIR : "has"
+    IMAGE_PAIR }o--|| IMAGE : "before"
+    IMAGE_PAIR }o--|| IMAGE : "after"
+    IMAGE_PAIR ||--o{ PREDICTION : "produces"
+    MODEL ||--o{ PREDICTION : "used_in"
+    PREDICTION ||--o{ CHANGE_OBJECT : "contains"

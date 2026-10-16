@@ -1,0 +1,21 @@
+
+---
+
+## 📄 data-flow.md
+
+```markdown
+# Диаграмма потоков данных: GeoChange Monitor
+
+## Поток 1 — Подготовка пары снимков
+
+```mermaid
+flowchart TD
+    A[Пользователь выбирает<br>территорию и даты] --> B[Data Loader:<br>загрузка двух снимков]
+    B --> C[Preprocessor:<br>нормализация, совмещение<br>по координатам, resize]
+    C --> D{Снимки<br>совместимы?}
+    D -- Нет --> E[Ошибка:<br>разные размеры / CRS]
+    D -- Да --> F[Сохранение пары<br>в Dataset Store]
+    F --> G[(metadata.db<br>scene_id, dates, bbox)]
+
+    style A fill:#4a7c59,color:#fff
+    style G fill:#2c4a7c,color:#fff

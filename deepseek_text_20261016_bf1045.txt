@@ -1,0 +1,17 @@
+geochangemonitor/
+├── data/               # датасеты и пары снимков
+├── models/             # веса моделей (.pt, .onnx)
+├── src/
+│   ├── data_loader.py
+│   ├── preprocess.py
+│   ├── baseline.py     # классические методы
+│   ├── train.py
+│   ├── predict.py
+│   ├── postprocess.py
+│   └── vectorize.py
+├── app/
+│   ├── main.py         # FastAPI
+│   └── ui.py           # Streamlit
+├── configs/
+├── docs/
+└── requirements.txt

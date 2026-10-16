@@ -1,0 +1,23 @@
+graph LR
+    S[Scene<br>voronezh_01<br>bbox: 51.6,39.1 - 51.7,39.3<br>source: LEVIR-CD]
+
+    I1[Image<br>2023-06-01<br>scene01_before.tif]
+    I2[Image<br>2024-06-01<br>scene01_after.tif]
+
+    P[ImagePair<br>pair_001<br>is_labeled: true]
+
+    M[Model<br>siamese_unet<br>v1.0<br>iou: 0.78]
+
+    PR[Prediction<br>iou: 0.76<br>f1: 0.82<br>time: 3.2s]
+
+    C1[ChangeObject<br>new_building<br>area: 145 m²<br>conf: 0.91]
+    C2[ChangeObject<br>new_building<br>area: 89 m²<br>conf: 0.87]
+
+    S --> I1
+    S --> I2
+    I1 --> P
+    I2 --> P
+    P --> PR
+    M --> PR
+    PR --> C1
+    PR --> C2

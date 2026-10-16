@@ -1,0 +1,57 @@
+
+---
+
+## 📄 component-diagram.md
+
+```markdown
+# Диаграмма компонентов: GeoChange Monitor
+
+## Архитектура системы
+
+```mermaid
+graph LR
+    subgraph DATA["Data Layer"]
+        DL[Data Loader<br>Rasterio / OpenCV]
+        PRE[Preprocessor<br>нормализация, совмещение]
+        DS[(Dataset Store<br>пары снимков + маски)]
+        META[(SQLite<br>metadata.db)]
+        DL --> PRE
+        PRE --> DS
+        PRE --> META
+    end
+
+    subgraph ML["ML Layer"]
+        BASE[Baseline Engine<br>разность / NDVI / SSIM]
+        TRAIN[Training Pipeline<br>train.py]
+        MODEL[Модель<br>Siamese U-Net / ChangeFormer / BIT]
+        INF[Inference Engine<br>predict.py]
+        POST[Postprocessor<br>морфология + фильтр по площади]
+        BASE --> POST
+        TRAIN --> MODEL
+        MODEL --> INF
+        INF --> POST
+    end
+
+    subgraph WEB["Web Layer"]
+        API[FastAPI<br>REST API]
+        UI[Streamlit UI<br>загрузка + визуализация]
+        MAP[Leaflet Map<br>наложение маски]
+        API --> UI
+        UI --> MAP
+    end
+
+    subgraph OUT["Output Layer"]
+        VEC[Vectorizer<br>GeoPandas + Shapely]
+        REP[Report Generator<br>CSV / PDF]
+        GEO[(GeoJSON<br>объекты изменений)]
+        VEC --> GEO
+        VEC --> REP
+    end
+
+    DS --> BASE
+    DS --> INF
+    META --> INF
+    POST --> VEC
+    POST --> API
+    GEO --> MAP
+    GEO --> REP

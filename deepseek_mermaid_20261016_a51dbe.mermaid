@@ -1,0 +1,12 @@
+flowchart TD
+    A[(Dataset Store<br>пары снимков + маски)] --> B[Train / Val Split<br>80% / 20%]
+    B --> C[Аугментации:<br>flip, rotate, color jitter]
+    C --> D[Загрузка модели:<br>Siamese U-Net / ChangeFormer / BIT]
+    D --> E[Обучение:<br>BCE + Dice Loss]
+    E --> F[Валидация:<br>IoU, F1, Precision, Recall]
+    F --> G{Метрика<br>улучшилась?}
+    G -- Да --> H[Сохранить model.pt<br>+ экспорт в ONNX]
+    G -- Нет --> I[Логировать,<br>оставить старую модель]
+
+    style A fill:#2c4a7c,color:#fff
+    style H fill:#4a7c59,color:#fff
